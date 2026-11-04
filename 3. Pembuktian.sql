@@ -4,7 +4,6 @@ SELECT id_lab, nama_lab, jumlah_perangkat, jumlah_online, jumlah_offline,
        jumlah_bermasalah, jumlah_sesi_aktif, diperbarui_pada
 FROM rekap_status_lab;
 
--- ---------------------------------------------------------------------
 EXPLAIN SELECT id_lab, nama_lab, jumlah_perangkat, jumlah_online, jumlah_offline,
                jumlah_bermasalah, jumlah_sesi_aktif
         FROM rekap_status_lab;
