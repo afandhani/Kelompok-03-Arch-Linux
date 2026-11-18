@@ -28,21 +28,6 @@ psql -U nexora -d nexora_modul11 -f sql/03_data_awal.sql   # data awal (INSERT)
 psql -U nexora -d nexora_modul11 -f sql/04_pengujian_json.sql   # isi data JSONB + pengujian
 ```
 
-Data awal (`03_data_awal.sql`) bersumber dari `backup_modul10.sql`; berkas backup tidak perlu lagi
-ditaruh di folder kerja karena tidak ada `\i backup_modul10.sql`.
-
-## Asal penggabungan file
-
-| File sekarang | Berisi | Asal |
-|---|---|---|
-| `01_database.sql` | Bagian A: buat database & struktur tabel | struktur (DDL) dari `backup_modul10.sql` |
-| | Bagian B: eksplorasi DBMS | `00_eksplorasi_dbms.sql` |
-| `02_tabel.sql` | Kolom JSONB, constraint, index GIN | `02_ubah_tabel_json.sql` |
-| `03_data_awal.sql` | Data awal Nexora (INSERT) | data (COPY) dari `backup_modul10.sql` |
-| `04_pengujian_json.sql` | Bagian 0: isi data JSONB perangkat & aplikasi | `03_data_json.sql` |
-| | Bagian A: pengujian JSONB | `04_pengujian_json.sql` |
-| | Bagian B: pemodelan objek | `05_pemodelan_objek.sql` |
-
 ## Pemetaan file → tugas modul
 
 | Tugas (skor) | Berkas |
