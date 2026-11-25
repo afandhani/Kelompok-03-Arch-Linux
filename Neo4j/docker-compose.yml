@@ -18,7 +18,6 @@ services:
 
     volumes:
       - neo4j_data:/data
-      - ./imports:/var/lib/neo4j/import:ro
 
 volumes:
   neo4j_data:
