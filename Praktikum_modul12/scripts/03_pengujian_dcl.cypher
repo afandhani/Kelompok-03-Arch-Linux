@@ -75,34 +75,34 @@ SHOW ROLE reporter PRIVILEGES;
 
 // [B0] Bukti sesi - memastikan perintah berikut benar-benar dijalankan
 //      sebagai report_user, bukan sebagai admin
-// SHOW CURRENT USER;
+SHOW CURRENT USER;
 //
 //   Hasil terukur: "report_user", ["reporter", "PUBLIC"]
 
 // [B1] SELECT - HARUS BERHASIL (hak baca diberikan)
-// MATCH (t:Trip)-[:ON_ROUTE]->(r:Route {route_id: 12})
-// WHERE t.started_at >= datetime('2026-11-01T00:00:00')
-// RETURN t.trip_id AS trip_id, r.route_name AS route_name
-// ORDER BY trip_id;
+MATCH (t:Trip)-[:ON_ROUTE]->(r:Route {route_id: 12})
+WHERE t.started_at >= datetime('2026-11-01T00:00:00')
+RETURN t.trip_id AS trip_id, r.route_name AS route_name
+ORDER BY trip_id;
 //
 //   Hasil terukur: 3 baris -> T001, T003, T005
 
 // [B2] DELETE - HARUS DITOLAK
-// MATCH (t:Trip {trip_id: 'T006'}) DELETE t;
+MATCH (t:Trip {trip_id: 'T006'}) DELETE t;
 //
 //   Pesan terukur:
 //   Delete node with labels 'Trip' on database 'neo4j' is not allowed
 //   for user 'report_user' with roles [PUBLIC, reporter].
 
 // [B3] CREATE - HARUS DITOLAK
-// CREATE (:Trip {trip_id: 'T999', status: 'completed'});
+CREATE (:Trip {trip_id: 'T999', status: 'completed'});
 //
 //   Pesan terukur:
 //   Create node with labels 'Trip' on database 'neo4j' is not allowed
 //   for user 'report_user' with roles [PUBLIC, reporter].
 
 // [B4] SET - HARUS DITOLAK
-// MATCH (t:Trip {trip_id: 'T001'}) SET t.status = 'cancelled';
+MATCH (t:Trip {trip_id: 'T001'}) SET t.status = 'cancelled';
 //
 //   Pesan terukur:
 //   Set property for property 'status' on database 'neo4j' is not
@@ -122,8 +122,6 @@ SHOW ROLE reporter PRIVILEGES;
 REVOKE MATCH {*} ON GRAPH neo4j NODES * FROM reporter;
 
 // C2. Periksa konfigurasi setelah pencabutan
-//     Baris "match | all_properties | NODE(*)" harus hilang, sedangkan
-//     "traverse | graph | NODE(*)" masih ada.
 SHOW ROLE reporter PRIVILEGES;
 
 
@@ -133,15 +131,15 @@ SHOW ROLE reporter PRIVILEGES;
 // ---------------------------------------------------------------------
 
 // [D0] Bukti sesi
-// SHOW CURRENT USER;
+SHOW CURRENT USER;
 
 // [D1] Membaca properti - TIDAK GAGAL, tetapi properti menjadi NULL
-// MATCH (t:Trip) RETURN t.trip_id AS trip_id LIMIT 5;
+MATCH (t:Trip) RETURN t.trip_id AS trip_id LIMIT 5;
 //
 //   Hasil terukur: 5 baris, seluruh kolom trip_id bernilai NULL.
 //
 // [D2] Menghitung simpul - masih dapat menemukan simpulnya
-// MATCH (t:Trip) RETURN count(t) AS jumlah;
+MATCH (t:Trip) RETURN count(t) AS jumlah;
 //
 //   Hasil terukur: 6
 //
@@ -165,37 +163,31 @@ SHOW ROLE reporter PRIVILEGES;
 // ---------------------------------------------------------------------
 
 // [F0] Bukti sesi
-// SHOW CURRENT USER;
+SHOW CURRENT USER;
 
 // [F1] Menghitung simpul - simpul tidak lagi terlihat
-// MATCH (t:Trip) RETURN count(t) AS jumlah;
+MATCH (t:Trip) RETURN count(t) AS jumlah;
 //
 //   Hasil terukur: 0
 
 // [F2] Membaca properti - tidak ada baris yang dikembalikan
-// MATCH (t:Trip) RETURN t.trip_id AS trip_id LIMIT 5;
+MATCH (t:Trip) RETURN t.trip_id AS trip_id LIMIT 5;
 //
 //   Hasil terukur: tidak ada baris keluaran (0 baris).
 //
-// Catatan: tanpa TRAVERSE, pemindaian label tidak menghasilkan simpul
-// apa pun. Kueri tetap berakhir normal, tetapi basis data tampak kosong
-// bagi pengguna tersebut. Inilah bentuk penerapan least privilege pada
-// jalur baca: data tidak sekadar disamarkan, melainkan tidak terjangkau.
-
 
 // =====================================================================
 // BAGIAN G - PEMULIHAN DAN PEMBERSIHAN (DIJALANKAN SEBAGAI ADMIN)
 // =====================================================================
 
 // G1. Pulihkan hak baca bila pengujian ingin diulang dari Bagian B
-// GRANT MATCH {*} ON GRAPH neo4j NODES         * TO reporter;
-// GRANT TRAVERSE ON GRAPH neo4j NODES         * TO reporter;
-// GRANT MATCH {*} ON GRAPH neo4j RELATIONSHIPS * TO reporter;
-// GRANT TRAVERSE ON GRAPH neo4j RELATIONSHIPS * TO reporter;
-// SHOW ROLE reporter PRIVILEGES;
+GRANT MATCH {*} ON GRAPH neo4j NODES         * TO reporter;
+GRANT TRAVERSE ON GRAPH neo4j NODES         * TO reporter;
+GRANT MATCH {*} ON GRAPH neo4j RELATIONSHIPS * TO reporter;
+GRANT TRAVERSE ON GRAPH neo4j RELATIONSHIPS * TO reporter;
+SHOW ROLE reporter PRIVILEGES;
 
-// G2. Hapus akun dan peran setelah praktikum selesai
-//     Urutan penting: pengguna dihapus lebih dahulu, baru perannya.
-// DROP USER report_user;
-// DROP ROLE reporter;
-// SHOW ROLES;
+// G2. Hapus akun dan peran
+DROP USER report_user;
+DROP ROLE reporter;
+SHOW ROLES;
