@@ -331,8 +331,7 @@ SHOW ROLE pjbl_operator PRIVILEGES;
 // ---------------------------------------------------------------------
 // 8. PEMBERSIHAN (opsional, jalankan setelah praktikum selesai)
 // ---------------------------------------------------------------------
-// MATCH (n) WHERE n:Lab OR n:Perangkat OR n:Pengguna OR n:KelompokAkses
-//      OR n:Sesi
-// DETACH DELETE n;
-// DROP ROLE pjbl_reporter;
-// DROP ROLE pjbl_operator;
+MATCH (n) WHERE n:Lab OR n:Perangkat OR n:Pengguna OR n:KelompokAkses OR n:Sesi
+DETACH DELETE n;
+DROP ROLE pjbl_reporter;
+DROP ROLE pjbl_operator;
