@@ -28,8 +28,6 @@
 //     Peran ini hanya memperoleh dua hak pada simpul dan relasi:
 //       TRAVERSE -> boleh menelusuri simpul dan relasi
 //       MATCH    -> boleh membaca seluruh properti
-//     Hak tulis (CREATE, DELETE, SET, REMOVE) sengaja TIDAK diberikan,
-//     sehingga tidak ada satu pun izin tulis yang perlu dicabut nanti.
 // ---------------------------------------------------------------------
 CREATE ROLE reporter IF NOT EXISTS;
 
@@ -46,8 +44,6 @@ GRANT MATCH {*} ON GRAPH neo4j RELATIONSHIPS * TO reporter;
 //     Perhatikan: jika pengguna sudah ada, password TIDAK diubah.
 //     Untuk menyetel ulang password, jalankan baris ALTER USER di bawah.
 //
-//     Ganti password sebelum presentasi. Jangan menyimpan password asli
-//     pada laporan maupun repositori Git.
 // ---------------------------------------------------------------------
 CREATE USER report_user
   IF NOT EXISTS
@@ -67,12 +63,6 @@ SHOW ROLES;
 SHOW USERS;
 
 SHOW ROLE reporter PRIVILEGES;
-
-// Bentuk ringkas untuk tangkapan layar (kolom lebih sedikit, tabel muat
-// dalam satu layar). Perintahnya sama, hanya kolomnya dipersempit.
-// Dipakai juga pada C2 dan E2.
-// SHOW ROLE reporter PRIVILEGES YIELD action, resource, segment
-//   RETURN action, resource, segment;
 
 
 // =====================================================================
@@ -118,9 +108,6 @@ SHOW ROLE reporter PRIVILEGES;
 //   Set property for property 'status' on database 'neo4j' is not
 //   allowed for user 'report_user' with roles [PUBLIC, reporter].
 //
-// Catatan: penolakan terjadi pada tahap otorisasi, sebelum kueri
-// dieksekusi. Data tidak berubah sama sekali (diperiksa sebagai admin:
-// jumlah simpul Trip tetap 6).
 
 
 // =====================================================================
@@ -158,10 +145,6 @@ SHOW ROLE reporter PRIVILEGES;
 //
 //   Hasil terukur: 6
 //
-// Catatan: inilah perilaku khas Neo4j. Pelanggaran hak baca tidak
-// menimbulkan pesan galat, melainkan menyembunyikan nilai properti.
-// Simpul masih dapat dilalui karena TRAVERSE masih aktif, tetapi isinya
-// tidak dapat dibaca.
 
 
 // =====================================================================
